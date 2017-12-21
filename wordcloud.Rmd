@@ -1,0 +1,49 @@
+---
+title: "Word Cloud"
+author: "Insights Lab"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: word_document
+---
+Below are summary statistics. The parameters where the following:
+
+* Minimum Frequency - `r input$minfreq` 
+* Stemming of words - `r input$stem` 
+* Remove punctuation - `r input$rmpunc` 
+* Remove stop words - `r input$rmstop` 
+
+
+```{r echo=FALSE, cache=FALSE,message=FALSE}
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+   docs <- Corpus(VectorSource(as.character(Data()$Words)))
+      # Convert the text to lower case
+      docs <- tm_map(docs, content_transformer(tolower))
+      # Remove numbers
+      docs <- tm_map(docs, removeNumbers)
+      # Remove english common stopwords
+      if(input$rmstop){
+        docs <- tm_map(docs, removeWords, stopwords("english"))
+      }
+      # Remove punctuations
+      if(input$rmpunc){
+        docs <- tm_map(docs, removePunctuation)
+      }
+      # Eliminate extra white spaces
+      docs <- tm_map(docs, stripWhitespace)
+      # Text stemming
+      if(input$stem){
+        docs <- tm_map(docs, stemDocument)
+      }
+      
+      dtm<- TermDocumentMatrix(docs)
+      m <- as.matrix(dtm)
+      v <- sort(rowSums(m),decreasing=TRUE)
+      d <- data.frame(word = names(v),freq=v)
+  
+      wordcloud(words = d$word, freq = d$freq, min.freq = input$minfreq,
+                max.words=200, random.order=FALSE, rot.per=0.35, 
+                colors=brewer.pal(8, "Dark2"))
+```
+

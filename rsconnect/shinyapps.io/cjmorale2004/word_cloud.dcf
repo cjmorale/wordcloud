@@ -1,0 +1,12 @@
+name: word_cloud
+title: word_cloud
+username:
+account: cjmorale2004
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 251020
+bundleId: 1146844
+url: https://cjmorale2004.shinyapps.io/word_cloud/
+when: 1513890654.67667
+asMultiple: FALSE
+asStatic: FALSE
